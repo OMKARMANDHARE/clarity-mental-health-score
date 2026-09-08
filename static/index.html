@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clarity — Mental Health Score</title>
+<meta name="description" content="A student wellbeing score based on daily habits, social media use and stress.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06070b; --bg2:#0b0d14; --panel:#10131c; --panel2:#151925;
+  --line:rgba(255,255,255,.085); --line2:rgba(255,255,255,.13);
+  --text:#f5f6fb; --muted:#8d94a8; --muted2:#677086;
+  --violet:#8b7cff; --cyan:#45e0df; --mint:#8ce8bc; --amber:#f3c969; --rose:#ff718f;
+  --shadow:0 28px 90px rgba(0,0,0,.38); --r:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:"Manrope",system-ui,sans-serif;
+  background:
+    radial-gradient(900px 560px at 8% -10%,rgba(139,124,255,.18),transparent 62%),
+    radial-gradient(760px 520px at 96% 10%,rgba(69,224,223,.11),transparent 61%),
+    radial-gradient(900px 600px at 55% 115%,rgba(140,232,188,.055),transparent 64%),
+    var(--bg);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;
+  background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+                    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:linear-gradient(to bottom,black,transparent 78%);
+}
+button,input,select{font:inherit} button{cursor:pointer}
+.app{width:min(1180px,calc(100% - 32px));margin:auto}
+.header{height:78px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font:700 21px "Outfit";letter-spacing:-.02em}
+.brand-icon{width:36px;height:36px;border-radius:11px;position:relative;background:linear-gradient(135deg,var(--violet),var(--cyan));box-shadow:0 0 35px rgba(139,124,255,.28)}
+.brand-icon:before{content:"";position:absolute;width:14px;height:14px;border:2px solid white;border-radius:50%;left:10px;top:9px}
+.brand-icon:after{content:"";position:absolute;width:7px;height:2px;background:white;transform:rotate(45deg);left:22px;top:23px;border-radius:99px}
+.header-chip{font-size:12px;color:#b9c0d2;border:1px solid var(--line);padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.025)}
+.hero{min-height:calc(100vh - 78px);display:grid;grid-template-columns:1.02fr .98fr;gap:50px;align-items:center;padding:44px 0 82px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;color:#c9c4ff;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 15px rgba(69,224,223,.8)}
+h1{font:700 clamp(54px,6vw,84px)/.95 "Outfit";letter-spacing:-.06em;margin:20px 0 20px;max-width:650px}
+.grad{background:linear-gradient(110deg,#fff 15%,#b7aaff 48%,#5fe8e2 88%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-copy{max-width:580px;color:var(--muted);font-size:17px;line-height:1.72;margin:0}
+.cta-row{display:flex;gap:11px;align-items:center;margin-top:30px}
+.btn{border:1px solid var(--line);border-radius:14px;padding:14px 18px;color:#edf0fa;font-weight:800;transition:.18s;background:rgba(255,255,255,.035)}
+.btn:hover{transform:translateY(-2px);border-color:var(--line2)}
+.btn-primary{border:0;color:#07080d;background:linear-gradient(100deg,#a997ff,#55e7e2);box-shadow:0 14px 36px rgba(89,126,255,.18)}
+.hero-note{margin-top:13px;color:var(--muted2);font-size:11px}
+.hero-visual{min-height:540px;position:relative;display:grid;place-items:center}
+.glow{position:absolute;width:390px;height:390px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,255,.20),rgba(69,224,223,.06) 44%,transparent 70%);filter:blur(12px)}
+.orbit{position:absolute;width:390px;height:230px;border:1px solid rgba(139,124,255,.25);border-radius:50%;transform:rotate(-18deg)}
+.orbit.o2{transform:rotate(50deg);width:340px;height:190px;border-color:rgba(69,224,223,.18)}
+.core{
+  width:260px;height:260px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 38% 32%,rgba(151,132,255,.34),rgba(21,25,40,.88) 58%);
+  border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 0 60px rgba(139,124,255,.08),0 0 90px rgba(80,104,255,.12);
+}
+.core:before,.core:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(69,224,223,.22)}
+.core:before{inset:30px}.core:after{inset:58px;border-color:rgba(139,124,255,.24)}
+.core-symbol{position:absolute;inset:0;display:grid;place-items:center;font:600 74px "Outfit";color:#e9e9ff;text-shadow:0 0 30px rgba(139,124,255,.55)}
+.float{position:absolute;border:1px solid var(--line);background:rgba(13,15,24,.78);backdrop-filter:blur(16px);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.float b{display:block;font-size:13px}.float span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.f1{left:3%;top:18%}.f2{right:0;top:32%}.f3{left:11%;bottom:13%}
+.assess,.result{display:none;padding:28px 0 72px}
+.assess.active,.result.active{display:block}
+.assess-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.back{border:0;background:none;color:#858da5;padding:6px 0;font-size:13px}
+.step-meta{font-size:11px;color:#747d95;font-weight:700;letter-spacing:.1em}
+.progress{height:4px;background:#e9edf2;border-radius:99px;overflow:hidden;margin-bottom:24px}
+.progress span{display:block;width:25%;height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:.35s}
+.quiz{
+  max-width:960px;margin:auto;border:1px solid var(--line);border-radius:30px;background:rgba(12,15,23,.78);
+  backdrop-filter:blur(20px);box-shadow:var(--shadow);overflow:hidden
+}
+.quiz-inner{display:grid;grid-template-columns:210px 1fr}
+.side{
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));border-right:1px solid var(--line);
+  padding:28px 22px
+}
+.side h3{margin:0 0 20px;font:600 20px "Outfit"}.side p{margin:0 0 24px;color:var(--muted);font-size:11px;line-height:1.55}
+.steps{display:grid;gap:18px}.sitem{display:flex;gap:10px;align-items:flex-start;color:#747d95;font-size:11px}
+.num{width:26px;height:26px;border:1px solid var(--line2);border-radius:50%;display:grid;place-items:center;flex:0 0 26px;font-weight:800}
+.sitem.current{color:#eef0fa}.sitem.current .num{border-color:var(--violet);background:rgba(139,124,255,.18);color:#fff;box-shadow:0 0 20px rgba(139,124,255,.16)}
+.sitem.done .num{border-color:rgba(69,224,223,.45);background:rgba(69,224,223,.12);color:var(--cyan)}
+.sitem b{display:block;font-size:12px}.sitem small{display:block;color:var(--muted2);margin-top:2px}
+.main{padding:36px}
+.panel{display:none;animation:up .35s ease}.panel.active{display:block}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.step-label{font-size:11px;font-weight:800;letter-spacing:.12em;color:#999fb4;text-transform:uppercase}
+.question{font:600 35px/1.08 "Outfit";letter-spacing:-.035em;margin:10px 0 10px}
+.hint{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 25px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#858da4;font-weight:700}
+select,input[type=number]{height:48px;width:100%;border:1px solid var(--line);border-radius:13px;background:#090c14;color:#e8ebf5;padding:0 13px;outline:none}
+select:focus,input[type=number]:focus{border-color:rgba(139,124,255,.7);box-shadow:0 0 0 3px rgba(139,124,255,.09)}
+.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choice{
+  border:1px solid var(--line);background:rgba(255,255,255,.025);color:#cfd4e3;border-radius:13px;padding:14px 10px;text-align:center;
+  font-size:12px;font-weight:700;transition:.16s
+}.choice:hover{border-color:rgba(139,124,255,.55)}.choice.selected{border-color:rgba(139,124,255,.95);background:rgba(139,124,255,.13);color:#fff;box-shadow:0 8px 25px rgba(139,124,255,.08)}
+.metric{margin-bottom:20px}.metric:last-child{margin-bottom:0}.mrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;font-weight:700}.mval{color:#b8adff;font:600 16px "Outfit"}input[type=range]{width:100%;accent-color:var(--violet);height:5px}
+.scale{display:flex;justify-content:space-between;color:#626b82;font-size:9px;margin-top:6px}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:28px}.error{color:#ff9db0;font-size:11px;min-height:17px}
+.loading{text-align:center;padding:22px 0;color:var(--muted);font-size:13px}.spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,.12);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 9px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result-head{text-align:center;max-width:700px;margin:18px auto 36px}.result-head .eyebrow{margin-bottom:11px}.result-head h2{font:600 clamp(42px,6vw,66px)/.98 "Outfit";letter-spacing:-.05em;margin:0 0 11px}.result-head p{color:var(--muted);line-height:1.6;margin:0}
+.result-grid{display:grid;grid-template-columns:390px 1fr;gap:18px}.result-card{border:1px solid var(--line);background:rgba(12,15,23,.78);border-radius:26px;box-shadow:var(--shadow);padding:28px}
+.score-card{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:430px}
+.ring{
+  width:230px;height:230px;border-radius:50%;margin:0 auto 22px;position:relative;display:grid;place-items:center;
+  background:conic-gradient(var(--cyan) 0deg,var(--violet) 0deg,rgba(255,255,255,.07) 0deg);
+}
+.ring:before{content:"";position:absolute;inset:11px;background:#0b0e17;border-radius:50%;box-shadow:inset 0 0 45px rgba(0,0,0,.5)}
+.ring-inner{position:relative;text-align:center;z-index:1}.bigscore{font:700 62px "Outfit";letter-spacing:-.05em}.den{color:#697189;font-size:11px;margin-top:-6px}
+.cat{font:700 20px "Outfit";margin-bottom:7px}.cat-copy{color:var(--muted);font-size:13px;line-height:1.55;margin:0}
+.result-card h3{font:600 22px "Outfit";margin:0 0 16px}.insights{display:grid;gap:10px}.insight{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:14px;padding:13px;color:#cdd2e1;font-size:12px;line-height:1.55}.insight-num{width:27px;height:27px;border-radius:9px;background:rgba(139,124,255,.13);color:#b8adff;display:grid;place-items:center;flex:0 0 27px;font-weight:800}
+.small-note{margin-top:17px;color:#636b80;font-size:10px;line-height:1.55}.result-actions{text-align:center;margin-top:20px}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:18px}.hero-visual{min-height:390px;order:-1}.quiz-inner{grid-template-columns:1fr}.side{display:none}.result-grid{grid-template-columns:1fr}.score-card{min-height:auto}}
+@media(max-width:620px){.app{width:calc(100% - 18px)}.header{height:66px}.header-chip{display:none}.hero{padding:26px 0 55px}h1{font-size:49px}.hero-copy{font-size:15px}.hero-visual{min-height:300px}.core{width:205px;height:205px}.glow{width:300px;height:300px}.orbit{width:300px;height:180px}.f1{left:0}.f2{right:0}.f3{left:2%;bottom:5%}.main{padding:25px 18px}.question{font-size:29px}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.choice-grid{grid-template-columns:1fr 1fr}.cta-row{align-items:stretch;flex-direction:column}.ring{width:205px;height:205px}.bigscore{font-size:55px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand"><span class="brand-icon"></span>Clarity</div>
+    <div class="header-chip">Student wellbeing • private check-in</div>
+  </header>
+
+  <section id="landing" class="hero">
+    <div>
+      <div class="eyebrow"><i></i> MENTAL HEALTH SCORE</div>
+      <h1>Know your <span class="grad">pattern.</span><br>Not just your number.</h1>
+      <p class="hero-copy">A quick check-in across social media, study, sleep, physical activity and stress. Your answers go through a trained machine-learning model to estimate a wellbeing score.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" onclick="start()">Start assessment →</button>
+        <button class="btn" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
+      </div>
+      <div class="hero-note">About 1 minute • No account • No clinical diagnosis</div>
+      <div id="how" style="display:flex;gap:22px;flex-wrap:wrap;margin-top:45px;color:#687188;font-size:11px">
+        <span>01 Answer honestly</span><span>02 ML prediction</span><span>03 Read your insights</span>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="glow"></div><div class="orbit"></div><div class="orbit o2"></div>
+      <div class="core"><div class="core-symbol">◌</div></div>
+      <div class="float f1"><b>Sleep</b><span>Daily rhythm</span></div>
+      <div class="float f2"><b>Social use</b><span>Digital habits</span></div>
+      <div class="float f3"><b>Stress</b><span>Personal context</span></div>
+    </div>
+  </section>
+
+  <section id="assessment" class="assess">
+    <div class="assess-top"><button class="back" onclick="backHome()">← Exit</button><div class="step-meta">STEP <span id="stepNo">1</span> OF 4</div></div>
+    <div class="progress"><span id="progress"></span></div>
+
+    <div class="quiz">
+      <div class="quiz-inner">
+        <aside class="side">
+          <h3>Your check-in</h3>
+          <p>Four short stages. You can go back and change any answer before revealing your score.</p>
+          <div class="steps">
+            <div class="sitem current" id="s1"><span class="num">1</span><div><b>Basics</b><small>About you</small></div></div>
+            <div class="sitem" id="s2"><span class="num">2</span><div><b>Social media</b><small>Platform & purpose</small></div></div>
+            <div class="sitem" id="s3"><span class="num">3</span><div><b>Daily rhythm</b><small>Study, sleep, activity</small></div></div>
+            <div class="sitem" id="s4"><span class="num">4</span><div><b>Stress</b><small>Your current level</small></div></div>
+          </div>
+        </aside>
+
+        <div class="main">
+          <div id="error" class="error"></div>
+
+          <div class="panel active" data-panel="1">
+            <div class="step-label">About you</div>
+            <div class="question">Let's start with the basics.</div>
+            <p class="hint">A little context helps the model interpret the rest of your answers.</p>
+            <div class="fields">
+              <div class="field"><label>Age</label><input id="Age" type="number" min="1" max="99" placeholder="21"></div>
+              <div class="field"><label>Gender</label><div class="select-wrap"><select id="Gender"><option value="">Choose</option><option>Male</option><option>Female</option></select><span class="select-chevron"></span></div></div>
+              <div class="field"><label>Country</label><div class="select-wrap"><select id="Country"><option value="">Choose</option><option>India</option><option>USA</option><option>Canada</option><option>Australia</option><option>UK</option><option>Germany</option><option>Turkey</option><option>Mexico</option><option>France</option><option>Spain</option><option>Other</option></select><span class="select-chevron"></span></div></div>
+              <div class="field"><label>Academic level</label><div class="select-wrap"><select id="Academic_Level"><option value="">Choose</option><option>High School</option><option>Undergraduate</option><option>Graduate</option></select><span class="select-chevron"></span></div></div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="2">
+            <div class="step-label">Social media</div>
+            <div class="question">What does your feed look like?</div>
+            <p class="hint">Choose the platform you use most and what you mainly use it for.</p>
+            <div class="field" style="margin-bottom:18px"><label>Most-used platform</label>
+              <div class="choice-grid" id="platformChoices">
+                <button type="button" class="choice" data-field="Most_Used_Platform" data-value="Instagram">Instagram</button><button type="button" class="choice" data-field="Most_Used_Platform" data-value="YouTube">YouTube</button>
+                <button type="button" class="choice" data-field="Most_Used_Platform" data-value="WhatsApp">WhatsApp</button><button type="button" class="choice" data-field="Most_Used_Platform" data-value="TikTok">TikTok</button>
+                <button type="button" class="choice" data-field="Most_Used_Platform" data-value="Facebook">Facebook</button><button type="button" class="choice" data-field="Most_Used_Platform" data-value="Snapchat">Snapchat</button>
+                <button type="button" class="choice" data-field="Most_Used_Platform" data-value="Twitter">Twitter</button><button type="button" class="choice" data-field="Most_Used_Platform" data-value="LinkedIn">LinkedIn</button>
+                <button type="button" class="choice" data-field="Most_Used_Platform" data-value="WeChat">WeChat</button><button type="button" class="choice" data-field="Most_Used_Platform" data-value="KakaoTalk">KakaoTalk</button>
+                <button type="button" class="choice" data-field="Most_Used_Platform" data-value="LINE">LINE</button><button type="button" class="choice" data-field="Most_Used_Platform" data-value="VKontakte">VKontakte</button>
+              </div>
+            </div>
+            <div class="field"><label>Purpose of use</label><div class="select-wrap"><select id="Purpose_Of_Use"><option value="">Choose</option><option>Education</option><option>Entertainment</option><option>Networking</option><option>News</option></select><span class="select-chevron"></span></div></div>
+          </div>
+
+          <div class="panel" data-panel="3">
+            <div class="step-label">Daily rhythm</div>
+            <div class="question">Tell us about a normal day.</div>
+            <p class="hint">Use rough averages. The goal is your usual pattern, not a perfect day.</p>
+            <div class="metric"><div class="mrow"><span>Social media usage</span><span class="mval" id="usageV">4.0 h</span></div><input id="Avg_Daily_Usage_Hours" type="range" min="0" max="24" step=".1" value="4"><div class="scale"><span>0h</span><span>12h</span><span>24h</span></div></div>
+            <div class="metric"><div class="mrow"><span>Study hours</span><span class="mval" id="studyV">4.5 h</span></div><input id="Study_Hours" type="range" min="0" max="24" step=".1" value="4.5"><div class="scale"><span>0h</span><span>12h</span><span>24h</span></div></div>
+            <div class="metric"><div class="mrow"><span>Physical activity</span><span class="mval" id="activityV">2.2 h</span></div><input id="Physical_Activity_Hours" type="range" min="0" max="24" step=".1" value="2.2"><div class="scale"><span>0h</span><span>12h</span><span>24h</span></div></div>
+            <div class="metric"><div class="mrow"><span>Sleep per night</span><span class="mval" id="sleepV">6.7 h</span></div><input id="Sleep_Hours_Per_Night" type="range" min="0" max="24" step=".1" value="6.7"><div class="scale"><span>0h</span><span>12h</span><span>24h</span></div></div>
+          </div>
+
+          <div class="panel" data-panel="4">
+            <div class="step-label">Stress check</div>
+            <div class="question">How has your stress felt lately?</div>
+            <p class="hint">Pick the option that feels closest to your current day-to-day experience.</p>
+            <div class="choice-grid">
+              <button type="button" class="choice" data-field="Stress_Level" data-value="Low">Low</button>
+              <button type="button" class="choice" data-field="Stress_Level" data-value="Medium">Medium</button>
+              <button type="button" class="choice" data-field="Stress_Level" data-value="High">High</button>
+              <button type="button" class="choice" data-field="Stress_Level" data-value="Very High">Very High</button>
+            </div>
+          </div>
+
+          <div class="nav">
+            <div><button type="button" class="btn" id="prevBtn" style="display:none" onclick="prev()">← Back</button></div>
+            <button type="button" class="btn btn-primary" id="nextBtn" onclick="next()">Continue →</button>
+          </div>
+          <div class="loading" id="loading" style="display:none"><div class="spinner"></div>Generating your score…</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="result">
+    <div class="result-head">
+      <div class="eyebrow"><i></i> YOUR PERSONAL RESULT</div>
+      <h2><span class="grad">Your score:</span> <span id="topScore">—</span><span style="color:#636b80">/10</span></h2>
+      <p id="topSummary"></p>
+    </div>
+    <div class="result-single">
+      <div class="result-card score-card">
+        <div class="ring" id="ring"><div class="ring-inner"><div class="bigscore" id="score">—</div><div class="den">OUT OF 10</div></div></div>
+        <div class="cat" id="category">—</div>
+        <p class="cat-copy" id="categoryCopy"></p>
+        <div class="result-divider"></div>
+        <div class="result-note">
+          <span class="result-note-icon"></span>
+          <span>This is a model-based estimate for reflection, not a clinical diagnosis or medical assessment.</span>
+        </div>
+      </div>
+    </div>
+    <div class="result-actions"><button class="btn" onclick="resetAll()">↻ Take the assessment again</button></div>
+  </section>
+</div>
+
+<script>
+const state={
+  Age:null,Gender:null,Country:null,Academic_Level:null,Most_Used_Platform:null,
+  Purpose_Of_Use:null,Avg_Daily_Usage_Hours:4,Study_Hours:4.5,
+  Physical_Activity_Hours:2.2,Sleep_Hours_Per_Night:6.7,Stress_Level:null
+};
+let current=1;
+
+function start(){document.getElementById('landing').style.display='none';document.getElementById('assessment').classList.add('active');current=1;render()}
+function backHome(){document.getElementById('assessment').classList.remove('active');document.getElementById('landing').style.display='grid';window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('active',+p.dataset.panel===current));
+  document.getElementById('stepNo').textContent=current;
+  document.getElementById('progress').style.width=(current*25)+'%';
+  document.getElementById('prevBtn').style.display=current===1?'none':'inline-block';
+  document.getElementById('nextBtn').textContent=current===4?'Reveal my score →':'Continue →';
+  for(let i=1;i<=4;i++){const x=document.getElementById('s'+i);x.classList.toggle('current',i===current);x.classList.toggle('done',i<current)}
+  document.getElementById('error').textContent='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function msg(t){document.getElementById('error').textContent=t}
+function validate(){
+  if(current===1){
+    const age=Number(document.getElementById('Age').value);
+    if(!age||age<1||age>99)return'Enter an age between 1 and 99.';
+    for(const id of ['Gender','Country','Academic_Level'])if(!document.getElementById(id).value)return'Please complete all the fields.';
+    state.Age=age;state.Gender=document.getElementById('Gender').value;state.Country=document.getElementById('Country').value;state.Academic_Level=document.getElementById('Academic_Level').value;
+  }
+  if(current===2){
+    if(!state.Most_Used_Platform)return'Choose your most-used platform.';
+    const p=document.getElementById('Purpose_Of_Use').value;if(!p)return'Choose your main purpose of use.';state.Purpose_Of_Use=p;
+  }
+  if(current===3){
+    state.Avg_Daily_Usage_Hours=Number(document.getElementById('Avg_Daily_Usage_Hours').value);
+    state.Study_Hours=Number(document.getElementById('Study_Hours').value);
+    state.Physical_Activity_Hours=Number(document.getElementById('Physical_Activity_Hours').value);
+    state.Sleep_Hours_Per_Night=Number(document.getElementById('Sleep_Hours_Per_Night').value);
+  }
+  if(current===4&&!state.Stress_Level)return'Choose a stress level.';
+  return null;
+}
+function next(){
+  const e=validate();if(e){msg(e);return}
+  if(current<4){current++;render()}else predict()
+}
+function prev(){if(current>1){current--;render()}}
+document.querySelectorAll('.choice').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const field=b.dataset.field;
+    document.querySelectorAll(`.choice[data-field="${field}"]`).forEach(x=>x.classList.remove('selected'));
+    b.classList.add('selected');state[field]=b.dataset.value;document.getElementById('error').textContent='';
+  })
+});
+[['Avg_Daily_Usage_Hours','usageV'],['Study_Hours','studyV'],['Physical_Activity_Hours','activityV'],['Sleep_Hours_Per_Night','sleepV']].forEach(([id,out])=>{
+  document.getElementById(id).addEventListener('input',e=>document.getElementById(out).textContent=Number(e.target.value).toFixed(1)+' h');
+});
+document.getElementById('Purpose_Of_Use').addEventListener('change',()=>document.getElementById('error').textContent='');
+
+async function predict(){
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('prevBtn').style.display='none';
+  document.getElementById('loading').style.display='block';
+  try{
+    const res=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(state)});
+    const data=await res.json();
+    if(!res.ok){
+      if(Array.isArray(data.errors) && data.errors.length) throw new Error(data.errors.map(x=>`${x.field}: ${x.message}`).join(' • '));
+      throw new Error(typeof data.detail==='string'?data.detail:'The prediction service returned an error.');
+    }
+    showResult(data);
+  }catch(e){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('nextBtn').style.display='inline-block';
+    document.getElementById('nextBtn').textContent='Reveal my score →';
+    msg('Could not generate the result. Make sure the FastAPI server is running and try again.');
+    console.error(e);
+  }
+}
+function showResult(data){
+  document.getElementById('assessment').classList.remove('active');
+  document.getElementById('result').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  const score=Math.max(0,Math.min(10,Number(data.score)));
+  document.getElementById('topScore').textContent=score.toFixed(1);
+  document.getElementById('score').textContent=score.toFixed(1);
+  document.getElementById('topSummary').textContent=data.summary||'';
+  document.getElementById('category').textContent=data.category_label||'Your result';
+  document.getElementById('categoryCopy').textContent=data.summary||'';
+  const ring=document.getElementById('ring'),deg=score/10*360;
+  ring.style.background=`conic-gradient(var(--cyan) 0deg, var(--violet) ${deg*.72}deg, rgba(255,255,255,.07) ${deg}deg)`;
+
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function resetAll(){
+  Object.assign(state,{
+    Age:null,Gender:null,Country:null,Academic_Level:null,Most_Used_Platform:null,
+    Purpose_Of_Use:null,Avg_Daily_Usage_Hours:4,Study_Hours:4.5,
+    Physical_Activity_Hours:2.2,Sleep_Hours_Per_Night:6.7,Stress_Level:null
+  });
+  document.querySelectorAll('input[type=number]').forEach(x=>x.value='');
+  document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);
+  document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+  document.getElementById('Avg_Daily_Usage_Hours').value=4;
+  document.getElementById('Study_Hours').value=4.5;
+  document.getElementById('Physical_Activity_Hours').value=2.2;
+  document.getElementById('Sleep_Hours_Per_Night').value=6.7;
+  document.getElementById('usageV').textContent='4.0 h';
+  document.getElementById('studyV').textContent='4.5 h';
+  document.getElementById('activityV').textContent='2.2 h';
+  document.getElementById('sleepV').textContent='6.7 h';
+  document.getElementById('result').classList.remove('active');
+  document.getElementById('assessment').classList.add('active');
+  document.getElementById('nextBtn').style.display='inline-block';
+  document.getElementById('loading').style.display='none';
+  current=1;render();
+}
+</script>
+</body>
+</html>
